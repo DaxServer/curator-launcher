@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/exec"
 	"syscall"
 )
 
@@ -35,6 +36,11 @@ func downloadServer() string {
 	slog.Info("Downloading", "url", url)
 	if err := downloadFile(url, downloadDest); err != nil {
 		slog.Error("Failed to download curator-server", "error", err)
+		os.Exit(1)
+	}
+	slog.Info("Verifying attestation")
+	if err := verifyAttestation(downloadDest); err != nil {
+		slog.Error("Attestation verification failed", "error", err)
 		os.Exit(1)
 	}
 	if err := os.Chmod(downloadDest, 0755); err != nil {
@@ -81,6 +87,16 @@ func releaseAssetURL() (string, error) {
 		}
 	}
 	return "", fmt.Errorf("Asset %q not found in latest release", assetName)
+}
+
+func verifyAttestation(binaryPath string) error {
+	cmd := exec.Command("gh", "attestation", "verify", binaryPath,
+		"--repo", githubRepo,
+		"--signer-workflow", githubRepo+"/.github/workflows/build.yml",
+	)
+	cmd.Stdout = os.Stderr
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func downloadFile(url, dest string) error {
