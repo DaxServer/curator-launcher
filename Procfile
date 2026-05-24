@@ -1,1 +1,1 @@
-web: ./curator-launcher
+web: curator-launcher
