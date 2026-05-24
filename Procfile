@@ -1,1 +1,1 @@
-web: ./curator-launcher
+web: exec curator-launcher
