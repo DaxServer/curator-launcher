@@ -65,7 +65,11 @@ func archAssetName() (string, error) {
 }
 
 func newGitHubClient() *github.Client {
-	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
+	token := os.Getenv("GITHUB_TOKEN")
+	if token == "" {
+		token = os.Getenv("GITHUB_PERSONAL_ACCESS_TOKEN")
+	}
+	if token != "" {
 		return github.NewClient(nil).WithAuthToken(token)
 	}
 	return github.NewClient(nil)

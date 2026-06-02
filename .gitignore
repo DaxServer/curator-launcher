@@ -1,2 +1,4 @@
-curator-launcher
-dragonfly-launcher
+/curator-launcher
+/dragonfly-launcher
+.claude
+.code-review-graph
