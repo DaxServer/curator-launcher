@@ -100,6 +100,10 @@ func verifyAttestation(binaryPath string) error {
 		return fmt.Errorf("no attestations found for binary")
 	}
 
+	if home := os.Getenv("HOME"); home == "" || home == "/" {
+		os.Setenv("HOME", "/tmp")
+	}
+
 	trustedRoot, err := root.FetchTrustedRoot()
 	if err != nil {
 		return fmt.Errorf("fetching trusted root: %w", err)
