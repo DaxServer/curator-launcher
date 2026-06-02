@@ -144,6 +144,14 @@ func buildArgs() []string {
 		slog.Info("setting maxmemory from cgroup limit", "bytes", maxmem)
 		args = append(args, fmt.Sprintf("--maxmemory=%d", maxmem))
 	}
+	if password := os.Getenv("REDIS_PASSWORD"); password != "" {
+		slog.Info("setting requirepass from REDIS_PASSWORD")
+		args = append(args, fmt.Sprintf("--requirepass=%s", password))
+	}
+	if db := os.Getenv("REDIS_DB"); db != "" {
+		slog.Info("setting dbnum from REDIS_DB", "dbnum", db)
+		args = append(args, fmt.Sprintf("--dbnum=%s", db))
+	}
 	args = append(args, os.Args[1:]...)
 	return args
 }
