@@ -29,6 +29,9 @@ const (
 )
 
 func main() {
+	if home := os.Getenv("HOME"); home == "" || home == "/" {
+		os.Setenv("HOME", "/tmp")
+	}
 	serverPath := downloadServer()
 	slog.Info("starting curator-server", "path", serverPath)
 	if err := syscall.Exec(serverPath, append([]string{assetName}, os.Args[1:]...), os.Environ()); err != nil {
