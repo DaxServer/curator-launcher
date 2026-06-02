@@ -41,13 +41,13 @@ toolforge build start -i launcher https://github.com/DaxServer/curator-launcher.
 ### Initial deploy
 
 ```sh
-toolforge webservice buildservice --mount=all start --image tool-launcher/tool-launcher:latest
+toolforge webservice buildservice --mount=all start --image tool-curator/launcher:latest
 ```
 
 ### DragonflyDB worker
 
 ```sh
-toolforge jobs run dragonfly --image tool-launcher/tool-launcher:latest --command "dragonfly-launcher" --continuous --emails all
+toolforge jobs run dragonfly --image tool-curator/launcher:latest --command "dragonfly-launcher" --continuous --emails all
 ```
 
 ## Development
