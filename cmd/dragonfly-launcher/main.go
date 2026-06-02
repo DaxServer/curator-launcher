@@ -46,7 +46,7 @@ func main() {
 	}
 
 	args := buildArgs()
-	slog.Info("starting dragonfly", "args", args)
+	slog.Info("starting dragonfly", "args", redactArgs(args))
 	if err := syscall.Exec(downloadDest, append([]string{"dragonfly"}, args...), os.Environ()); err != nil {
 		slog.Error("failed to exec dragonfly", "error", err)
 		os.Exit(1)
@@ -149,8 +149,12 @@ func buildArgs() []string {
 		args = append(args, fmt.Sprintf("--requirepass=%s", password))
 	}
 	if db := os.Getenv("REDIS_DB"); db != "" {
-		slog.Info("setting dbnum from REDIS_DB", "dbnum", db)
-		args = append(args, fmt.Sprintf("--dbnum=%s", db))
+		if _, err := strconv.Atoi(db); err != nil {
+			slog.Error("REDIS_DB is not a valid integer, ignoring", "value", db)
+		} else {
+			slog.Info("setting dbnum from REDIS_DB", "dbnum", db)
+			args = append(args, fmt.Sprintf("--dbnum=%s", db))
+		}
 	}
 	args = append(args, os.Args[1:]...)
 	return args
@@ -192,4 +196,16 @@ func readCgroupV1Memory() int64 {
 		return 0
 	}
 	return v
+}
+
+func redactArgs(args []string) []string {
+	out := make([]string, len(args))
+	for i, a := range args {
+		if strings.HasPrefix(a, "--requirepass=") {
+			out[i] = "--requirepass=***"
+		} else {
+			out[i] = a
+		}
+	}
+	return out
 }
