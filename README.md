@@ -26,13 +26,13 @@ toolforge build start -i launcher https://github.com/DaxServer/curator-launcher.
 
 | Variable | Required | Description |
 |---|---|---|
-| `GITHUB_TOKEN` | No | GitHub API token — avoids unauthenticated rate limits when fetching the release and attestations |
+| `GITHUB_TOKEN` | No | GitHub API token — avoids unauthenticated rate limits when fetching the release and attestations. Falls back to `GITHUB_PERSONAL_ACCESS_TOKEN` if unset |
 
 ### dragonfly-launcher
 
 | Variable | Required | Description |
 |---|---|---|
-| `GITHUB_TOKEN` | No | GitHub API token — avoids unauthenticated rate limits when fetching the release |
+| `GITHUB_TOKEN` | No | GitHub API token — avoids unauthenticated rate limits when fetching the release. Falls back to `GITHUB_PERSONAL_ACCESS_TOKEN` if unset |
 | `REDIS_PASSWORD` | No | Sets `--requirepass` on DragonflyDB |
 | `REDIS_DB` | No | Sets `--dbnum` on DragonflyDB (must be a valid integer) |
 
